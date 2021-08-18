@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour
 
     private bool _doDoubleJump;
 
+    private bool _isMovingRight;
+
     private void OnEnable()
     {
         playerInput.onActionTriggered += OnActionTriggered;
@@ -59,6 +61,8 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         _rigidbody2D.AddForce(_movimento * velocidade);
+        if(_isMovingRight && _movimento.x > 0) Flip();
+        if (!_isMovingRight && _movimento.x < 0) Flip();
         
         Jump();
     }
@@ -111,6 +115,13 @@ public class PlayerController : MonoBehaviour
 
             if (obj.canceled) _doJump = false;
         }
+    }
+
+    private void Flip()
+    {
+        _isMovingRight = !_isMovingRight;
+        transform.localScale = new Vector3(transform.localScale.x * -1,
+            transform.localScale.y, transform.localScale.z);
     }
 
     private void OnDrawGizmos()
