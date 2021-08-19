@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
 
     private bool _isMovingRight;
 
+    private Animator _playerAnimator;
+
     private void OnEnable()
     {
         playerInput.onActionTriggered += OnActionTriggered;
@@ -49,12 +51,15 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _playerAnimator = GetComponent<Animator>();
         _gameInput = new GameInput();
     }
 
     private void Update()
     {
         CheckGround();
+        
+        AnimationUpdates();
     }
 
     // Update is called once per frame
@@ -63,10 +68,17 @@ public class PlayerController : MonoBehaviour
         _rigidbody2D.AddForce(_movimento * velocidade);
         if(_isMovingRight && _movimento.x > 0) Flip();
         if (!_isMovingRight && _movimento.x < 0) Flip();
-        
+
         Jump();
     }
 
+    private void AnimationUpdates()
+    {
+        _playerAnimator.SetFloat("Speed", Mathf.Abs(_rigidbody2D.velocity.x));
+        _playerAnimator.SetBool("isGrounded", _isGrounded);
+        _playerAnimator.SetFloat("VertSpeed", _rigidbody2D.velocity.y);
+    }
+    
     private void CheckGround()
     {
         _isGrounded = Physics2D.Linecast(transform.position, transform.position+groundOffset, groundLayer);
