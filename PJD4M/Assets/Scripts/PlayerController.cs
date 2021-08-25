@@ -3,17 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Networking;
 using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
     public float velocidade;
 
+    public float maxSpeed;
+
     public float jumpSpeed;
 
     public float maxJumpTime;
 
     public Vector3 groundOffset;
+    public Vector3 boxSize;
 
     public LayerMask groundLayer;
 
@@ -65,7 +69,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        /*
         _rigidbody2D.AddForce(_movimento * velocidade);
+        if (Mathf.Abs(_rigidbody2D.velocity.x) > maxSpeed)
+            _rigidbody2D.velocity = new Vector2(Mathf.Sign(_rigidbody2D.velocity.x) * maxSpeed,
+                _rigidbody2D.velocity.y);
+        */
+        
+        _rigidbody2D.velocity = new Vector2(_movimento.x * velocidade, _rigidbody2D.velocity.y);
+        
         if(_isMovingRight && _movimento.x > 0) Flip();
         if (!_isMovingRight && _movimento.x < 0) Flip();
 
@@ -74,14 +86,39 @@ public class PlayerController : MonoBehaviour
 
     private void AnimationUpdates()
     {
-        _playerAnimator.SetFloat("Speed", Mathf.Abs(_rigidbody2D.velocity.x));
+        _playerAnimator.SetFloat("Speed", Mathf.Abs(_movimento.x));
         _playerAnimator.SetBool("isGrounded", _isGrounded);
         _playerAnimator.SetFloat("VertSpeed", _rigidbody2D.velocity.y);
     }
     
     private void CheckGround()
     {
-        _isGrounded = Physics2D.Linecast(transform.position, transform.position+groundOffset, groundLayer);
+        //_isGrounded = Physics2D.Linecast(transform.position, transform.position+groundOffset, groundLayer);
+
+        /*
+        RaycastHit2D[] hit = new RaycastHit2D[] { };
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.layerMask = groundLayer;
+        filter.useLayerMask = true;
+        int numberOfHits = Physics2D.BoxCast(transform.position + new Vector3(groundOffset.x, groundOffset.y, 0), 
+            boxSize, 0, Vector2.up, filter, hit, groundOffset.z);
+        Debug.Log(numberOfHits);
+        
+        if (numberOfHits > 0)
+        {
+            foreach (RaycastHit2D raycastHit2D in hit)
+            {
+                Debug.Log(Vector2.Angle(Vector2.up, raycastHit2D.normal));
+                if (Vector2.Angle(Vector2.up, raycastHit2D.normal) < 10f)
+                {
+                    _isGrounded = true;
+                    break;
+                }
+            }
+        }*/
+        
+        _isGrounded = Physics2D.BoxCast(transform.position + new Vector3(groundOffset.x, groundOffset.y, 0), 
+            boxSize, 0, Vector2.up, groundOffset.z, groundLayer);
         if (_isGrounded && _doDoubleJump) _doDoubleJump = false;
 
     }
@@ -90,7 +127,8 @@ public class PlayerController : MonoBehaviour
     {
         if (_doJump)
         {
-            _rigidbody2D.AddForce(Vector2.up * jumpSpeed);
+            //_rigidbody2D.AddForce(Vector2.up * jumpSpeed);
+            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpSpeed);
             if (Time.time - _startJumpTime > maxJumpTime) _doJump = false;
         }
     }
@@ -138,6 +176,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Debug.DrawLine(transform.position, transform.position+groundOffset, Color.red);
+        //Debug.DrawLine(transform.position, transform.position+groundOffset, Color.red);
+        Gizmos.color = Color.red;
+        Gizmos.DrawCube(transform.position + new Vector3(groundOffset.x, groundOffset.y,0), 
+            boxSize);
+        Gizmos.DrawCube(transform.position + new Vector3(groundOffset.x, groundOffset.y+groundOffset.z,0), 
+            boxSize);
     }
 }
