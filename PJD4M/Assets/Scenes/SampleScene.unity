@@ -1563,7 +1563,7 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
+  m_UpdateMethod: 0
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
@@ -1632,7 +1632,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.2999759, y: 0.9140338, z: -10}
+  m_LocalPosition: {x: 3.2999766, y: 0.9140338, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2197,7 +2197,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 871ca8f6fc01f6547ad37283f5771074, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -3117,7 +3117,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: aacb8af4dfa5220448589745e263157f, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -3225,10 +3225,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0860d48b0b4a64582867d6d1029ee2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocidade: 20
-  jumpSpeed: 35
-  maxJumpTime: 0.2
-  groundOffset: {x: 0, y: -1.3, z: 0}
+  velocidade: 10
+  maxSpeed: 8
+  jumpSpeed: 5
+  maxJumpTime: 0.5
+  groundOffset: {x: -0.05, y: 0, z: -0.84}
+  boxSize: {x: 0.95, y: 1, z: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -4451,7 +4453,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1902534642}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.3000035, y: 0.42, z: -10}
+  m_LocalPosition: {x: 3.3000038, y: 0.42, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 463079846}
