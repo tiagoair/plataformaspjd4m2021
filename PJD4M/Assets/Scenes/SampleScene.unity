@@ -691,7 +691,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 6
-      m_TileSpriteIndex: 6
+      m_TileSpriteIndex: 11
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -832,18 +832,18 @@ Tilemap:
     m_Data: {fileID: 21300000, guid: 27ce889b45085b64ba7e56a6c2eccdd5, type: 3}
   - m_RefCount: 2
     m_Data: {fileID: 21300000, guid: aaa577befe8172844878a6a2f5ddefc7, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: 21300000, guid: 10981dae521af7b4a92be3de8d78b407, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: 21300000, guid: fa3943d8cf7683445b7f5ed140c11383, type: 3}
   - m_RefCount: 1
@@ -1031,7 +1031,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 6200000, guid: aacb8af4dfa5220448589745e263157f, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -1050,7 +1050,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.055640936, y: -0.05166626}
+  m_Offset: {x: -0.055640936, y: -0.051174343}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1061,8 +1061,8 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8160324, y: 2.2951298}
-  m_EdgeRadius: 0
+  m_Size: {x: 0.8160324, y: 2.294146}
+  m_EdgeRadius: 0.01
 --- !u!212 &1257151963
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1140,15 +1140,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0860d48b0b4a64582867d6d1029ee2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocidade: 10
-  maxSpeed: 8
-  jumpSpeed: 5
-  maxJumpTime: 0.5
+  velocidade: 400
+  maxSpeed: 400
+  jumpSpeed: 400
+  maxJumpTime: 0.2
   groundOffset: {x: -0.05, y: 0, z: -0.84}
   boxSize: {x: 0.95, y: 1, z: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  groundFilter:
+    useTriggers: 0
+    useLayerMask: 1
+    useDepth: 0
+    useOutsideDepth: 0
+    useNormalAngle: 0
+    useOutsideNormalAngle: 0
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 64
+    minDepth: 0
+    maxDepth: 0
+    minNormalAngle: 0
+    maxNormalAngle: 0
   playerInput: {fileID: 1257151966}
 --- !u!114 &1257151966
 MonoBehaviour:
