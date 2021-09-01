@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public Vector3 boxSize;
 
     public LayerMask groundLayer;
+    public ContactFilter2D groundFilter;
 
     [SerializeField] private PlayerInput playerInput;
     
@@ -41,6 +42,8 @@ public class PlayerController : MonoBehaviour
 
     private Animator _playerAnimator;
 
+    private Collider2D _playerCollider;
+
     private void OnEnable()
     {
         playerInput.onActionTriggered += OnActionTriggered;
@@ -56,6 +59,7 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _playerAnimator = GetComponent<Animator>();
+        _playerCollider = GetComponent<Collider2D>();
         _gameInput = new GameInput();
     }
 
@@ -76,7 +80,7 @@ public class PlayerController : MonoBehaviour
                 _rigidbody2D.velocity.y);
         */
         
-        _rigidbody2D.velocity = new Vector2(_movimento.x * velocidade, _rigidbody2D.velocity.y);
+        _rigidbody2D.velocity = new Vector2(_movimento.x * velocidade * Time.fixedDeltaTime, _rigidbody2D.velocity.y);
         
         if(_isMovingRight && _movimento.x > 0) Flip();
         if (!_isMovingRight && _movimento.x < 0) Flip();
@@ -116,9 +120,42 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }*/
+
+        _isGrounded = false;
         
-        _isGrounded = Physics2D.BoxCast(transform.position + new Vector3(groundOffset.x, groundOffset.y, 0), 
+        RaycastHit2D[] hit = Physics2D.BoxCastAll(transform.position + new Vector3(groundOffset.x, groundOffset.y, 0), 
             boxSize, 0, Vector2.up, groundOffset.z, groundLayer);
+        if (hit.Length>0)
+        {
+            Debug.Log(hit.Length);
+            foreach (RaycastHit2D raycastHit2D in hit)
+            {
+                if (Vector2.Angle(raycastHit2D.normal, Vector2.up) < 20 &&
+                    raycastHit2D.point.y < transform.position.y - 1.2f)
+                {
+                    _isGrounded = true;
+                    break;
+                }
+            }
+        }
+        
+        /*
+        ContactPoint2D[] hits = Array.Empty<ContactPoint2D>();
+        _playerCollider.GetContacts(hits);
+        if (hits.Length>0)
+        {
+            Debug.Log(hits.Length);
+            foreach (ContactPoint2D hit in hits)
+            {
+                if (Vector2.Angle(hit.normal, Vector2.up) < 20 &&
+                    hit.point.y < transform.position.y - 1.2f)
+                {
+                    _isGrounded = true;
+                    break;
+                }
+            }
+        }*/
+        
         if (_isGrounded && _doDoubleJump) _doDoubleJump = false;
 
     }
@@ -128,7 +165,7 @@ public class PlayerController : MonoBehaviour
         if (_doJump)
         {
             //_rigidbody2D.AddForce(Vector2.up * jumpSpeed);
-            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpSpeed);
+            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpSpeed * Time.fixedDeltaTime);
             if (Time.time - _startJumpTime > maxJumpTime) _doJump = false;
         }
     }
@@ -139,7 +176,7 @@ public class PlayerController : MonoBehaviour
         {
             _movimento = obj.ReadValue<Vector2>();
             _movimento.y = 0;
-            Debug.Log(_movimento.ToString());
+            //Debug.Log(_movimento.ToString());
         }
 
         if (String.Compare(obj.action.name, _gameInput.Gameplay.Jump.name, StringComparison.Ordinal) == 0)
@@ -178,9 +215,10 @@ public class PlayerController : MonoBehaviour
     {
         //Debug.DrawLine(transform.position, transform.position+groundOffset, Color.red);
         Gizmos.color = Color.red;
-        Gizmos.DrawCube(transform.position + new Vector3(groundOffset.x, groundOffset.y,0), 
+        Gizmos.DrawWireCube(transform.position + new Vector3(groundOffset.x, groundOffset.y,0), 
             boxSize);
-        Gizmos.DrawCube(transform.position + new Vector3(groundOffset.x, groundOffset.y+groundOffset.z,0), 
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(transform.position + new Vector3(groundOffset.x, groundOffset.y+groundOffset.z,0), 
             boxSize);
     }
 }
