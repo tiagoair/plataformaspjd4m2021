@@ -123,7 +123,7 @@ public class PlayerController : MonoBehaviour
 
         _isGrounded = false;
         
-        RaycastHit2D[] hit = Physics2D.BoxCastAll(transform.position + new Vector3(groundOffset.x, groundOffset.y, 0), 
+        RaycastHit2D[] hit = Physics2D.BoxCastAll(transform.position + new Vector3(groundOffset.x * transform.localScale.x, groundOffset.y, 0), 
             boxSize, 0, Vector2.up, groundOffset.z, groundLayer);
         if (hit.Length>0)
         {
@@ -215,10 +215,10 @@ public class PlayerController : MonoBehaviour
     {
         //Debug.DrawLine(transform.position, transform.position+groundOffset, Color.red);
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position + new Vector3(groundOffset.x, groundOffset.y,0), 
+        Gizmos.DrawWireCube(transform.position + new Vector3(groundOffset.x * transform.localScale.x, groundOffset.y,0), 
             boxSize);
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(transform.position + new Vector3(groundOffset.x, groundOffset.y+groundOffset.z,0), 
+        Gizmos.DrawWireCube(transform.position + new Vector3(groundOffset.x * transform.localScale.x, groundOffset.y+groundOffset.z,0), 
             boxSize);
     }
 }
