@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Victory
+  - Kill
   layers:
   - Default
   - TransparentFX
@@ -43,6 +45,9 @@ TagManager:
     locked: 0
   - name: Background
     uniqueID: 2927428371
+    locked: 0
+  - name: Acid
+    uniqueID: 2168910745
     locked: 0
   - name: Gameplay
     uniqueID: 1281521865
