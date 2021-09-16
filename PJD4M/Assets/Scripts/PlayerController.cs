@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
 
     private bool _isDead;
 
-    private void OnEnable()
+   private void OnEnable()
     {
         playerInput.onActionTriggered += OnActionTriggered;
     }
@@ -136,7 +136,7 @@ public class PlayerController : MonoBehaviour
             boxSize, 0, Vector2.up, groundOffset.z, groundLayer);
         if (hit.Length>0)
         {
-            Debug.Log(hit.Length);
+            //Debug.Log(hit.Length);
             foreach (RaycastHit2D raycastHit2D in hit)
             {
                 if (Vector2.Angle(raycastHit2D.normal, Vector2.up) < 20 &&
@@ -215,11 +215,11 @@ public class PlayerController : MonoBehaviour
             {
                 if (_isDead)
                 {
-                    //TODO: Chamar a funcao de reload level
+                    GameManager.instance.CheckDeath();
                 }
                 else
                 {
-                    //TODO: Chamar a funcao de Load next level
+                    GameManager.instance.LoadNextLevel();
                 }
             }
         }
