@@ -225,6 +225,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void JumpButton()
+    {
+        if (_isGrounded)
+        {
+            _doJump = true;
+            _startJumpTime = Time.time;
+        }
+        else
+        {
+            if (!_doDoubleJump)
+            {
+                _doDoubleJump = true;
+                _doJump = true;
+                _startJumpTime = Time.time;
+            }
+        }
+        
+    }
+
     private void Flip()
     {
         _isMovingRight = !_isMovingRight;
