@@ -4,6 +4,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public float maxEnergy;
+
+    public float energySpendRate;
+
+    public float energyRecoverAmount;
+    
     public float velocidade;
 
     public float maxSpeed;
@@ -44,6 +50,8 @@ public class PlayerController : MonoBehaviour
 
     private bool _isDead;
 
+    private float _currentEnergy;
+
    private void OnEnable()
     {
         playerInput.onActionTriggered += OnActionTriggered;
@@ -62,6 +70,8 @@ public class PlayerController : MonoBehaviour
         _playerCollider = GetComponent<Collider2D>();
         _gameInput = new GameInput();
 
+        _currentEnergy = maxEnergy;
+        HUDObserverManager.PlayerEnergyChanged(_currentEnergy);
         _isActive = true;
     }
 
@@ -72,6 +82,8 @@ public class PlayerController : MonoBehaviour
             CheckGround();
         
             AnimationUpdates(); 
+            
+            SpendEnergy();
         }
         
     }
@@ -216,10 +228,12 @@ public class PlayerController : MonoBehaviour
                 if (_isDead)
                 {
                     GameManager.instance.CheckDeath();
+                    HUDObserverManager.PlayerDied(false);
                 }
                 else
                 {
                     GameManager.instance.LoadNextLevel();
+                    HUDObserverManager.PlayerVictory(false);
                 }
             }
         }
@@ -265,6 +279,18 @@ public class PlayerController : MonoBehaviour
         {
             OnVictory();
         }
+
+        if (other.CompareTag("EnergyBit"))
+        {
+            _currentEnergy += energyRecoverAmount;
+
+            if (_currentEnergy > maxEnergy) _currentEnergy = maxEnergy;
+            
+            
+            HUDObserverManager.PlayerEnergyChanged(_currentEnergy);
+            
+            Destroy(other.gameObject);
+        }
     }
 
     private void KillPlayer()
@@ -274,6 +300,7 @@ public class PlayerController : MonoBehaviour
         _rigidbody2D.bodyType = RigidbodyType2D.Static;
         _playerAnimator.SetBool("Active", _isActive);
         _playerAnimator.Play("Dead");
+        HUDObserverManager.PlayerDied(true);
     }
 
     private void OnVictory()
@@ -282,6 +309,21 @@ public class PlayerController : MonoBehaviour
         _rigidbody2D.bodyType = RigidbodyType2D.Static;
         _playerAnimator.SetBool("Active", _isActive);
         _playerAnimator.Play("Victory");
+        HUDObserverManager.PlayerVictory(true);
+    }
+
+    private void SpendEnergy()
+    {
+        _currentEnergy -= Time.deltaTime * energySpendRate;
+        HUDObserverManager.PlayerEnergyChanged(_currentEnergy);
+        
+        if (_currentEnergy < 0)
+        {
+            _currentEnergy = 0;
+            
+            HUDObserverManager.PlayerEnergyChanged(_currentEnergy);
+            KillPlayer();
+        }
     }
 
     private void OnDrawGizmos()

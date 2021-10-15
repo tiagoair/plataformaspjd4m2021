@@ -12,12 +12,8 @@ public class GameManager : MonoBehaviour
 
     public int lives = 3;
 
-    public TMP_Text livesText;
-    
-    private void Start()
+    private void Awake()
     {
-        
-        
         if (instance == null)
         {
             instance = this;
@@ -27,6 +23,11 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        HUDObserverManager.LivesChanged(lives);
     }
 
     private void Update()
@@ -62,6 +63,7 @@ public class GameManager : MonoBehaviour
     public void CheckDeath()
     {
         lives--;
+        HUDObserverManager.LivesChanged(lives);
 
         if (lives < 0)
         {
@@ -79,6 +81,7 @@ public class GameManager : MonoBehaviour
             SceneManager.GetActiveScene().name == "GameOver")
         {
             lives = 3;
+            HUDObserverManager.LivesChanged(lives);
             LoadLevel1();
         }
     }
