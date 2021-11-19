@@ -24,6 +24,12 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayer;
     public ContactFilter2D groundFilter;
 
+    [SerializeField] private GameObject muzzlePrefab;
+    
+    [SerializeField] private GameObject bulletPrefab;
+
+    [SerializeField] private Transform bulletOrigin;
+
     [SerializeField] private PlayerInput playerInput;
     
     private Rigidbody2D _rigidbody2D;
@@ -51,6 +57,8 @@ public class PlayerController : MonoBehaviour
     private bool _isDead;
 
     private float _currentEnergy;
+
+    private bool _needToFire;
 
    private void OnEnable()
     {
@@ -84,6 +92,8 @@ public class PlayerController : MonoBehaviour
             AnimationUpdates(); 
             
             SpendEnergy();
+            
+            FireBullet();
         }
         
     }
@@ -237,8 +247,37 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
+        if (String.Compare(obj.action.name, _gameInput.Gameplay.Fire.name, StringComparison.Ordinal) == 0)
+        {
+            if(obj.performed && _isActive) StartFireAnim();
+        }
+
     }
 
+    private void StartFireAnim()
+    {
+       _playerAnimator.SetTrigger("Shoot");
+        _needToFire = true;
+    }
+    
+    private void FireBullet()
+    {
+        if (_playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("ShootIdle") ||
+            _playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("ShootWalk") ||
+            _playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("ShootJump"))
+        {
+            if (_needToFire)
+            {
+                Instantiate(muzzlePrefab, bulletOrigin.position, bulletOrigin.rotation);
+                GameObject newBullet = Instantiate(bulletPrefab, bulletOrigin.position, bulletOrigin.rotation);
+                newBullet.GetComponent<BulletController>().IsFlipped = _isMovingRight;
+                _needToFire = false;
+            }
+            
+        }
+    }
+    
     public void JumpButton()
     {
         if (_isGrounded)
